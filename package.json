@@ -1,0 +1,14 @@
+{
+  "name": "@umanit/tools",
+  "version": "1.0.0",
+  "description": "Tools used by UmanIT during websites development.",
+  "author": "UmanIT <contact@umanit.fr>",
+  "license": "MIT",
+  "repository": "umanit/npm-tools",
+  "main": "index.js",
+  "keywords": [
+    "npm",
+    "package",
+    "umanit"
+  ]
+}
