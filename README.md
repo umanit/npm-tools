@@ -101,9 +101,11 @@ Or a `HttpError` object when an error occurred which contains:
 * `headers`: An object `Headers` for the request.
 * `json`: A JSON object to send. If present, it will be `JSON.stringify` in the request `body`.
 * `form`: A `HTMLFormElement` to send. If present, it will be transformed into a `FormData` in the request `body` and
-  it's method will be automatically used.
+  it’s method will be automatically used.
 * `method`: The HTTP method to use.
 * `body`: The body to send.
+* `unprocessableEntityAsError` (default `false`): A boolean which indicates if HTTP Status 422 should be considered as
+  an error or not.
 
 #### Usage
 

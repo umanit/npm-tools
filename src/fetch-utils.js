@@ -61,10 +61,11 @@ function _getJson(body) {
  *
  * @param {string} url
  * @param {Object} options
- * @param {Headers|null} options.headers
- * @param {string|null} options.json
- * @param {HTMLFormElement|null} options.form
- * @param {string|null} options.method
+ * @param {null|Headers=} options.headers
+ * @param {null|string=} options.json
+ * @param {null|HTMLFormElement=} options.form
+ * @param {null|string=} options.method
+ * @param {boolean=true} options.unprocessableEntityAsError
  * @param {any} options.body
  * @returns {PromiseLike<{headers: Headers, json: any, body: string, status: number}>}
  */
@@ -108,7 +109,7 @@ export const ajax = (url, options = {}) => {
     .then(({ status, statusText, headers, body }) => {
       const json = _getJson(body);
 
-      if (status < 200 || status >= 300) {
+      if ((status < 200 || status >= 300) && (options.unprocessableEntityAsError || 422 !== status)) {
         return Promise.reject(
           new HttpError(
             (json && json.message) || statusText,
