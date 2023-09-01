@@ -30,7 +30,7 @@ function _appendQueryString(urlString, options) {
   if (_isIterable(options.query)) {
     for (const [key, value] of options.query) {
       if (undefined !== value) {
-        url.searchParams.append(key, value.toString());
+        url.searchParams.append(key, value);
       }
     }
   } else {
@@ -38,7 +38,7 @@ function _appendQueryString(urlString, options) {
 
     Object.values(options.query).forEach((value, key) => {
       if (undefined !== value) {
-        url.searchParams.append(keys[key], value.toString());
+        url.searchParams.append(keys[key], value);
       }
     });
   }
