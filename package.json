@@ -1,6 +1,6 @@
 {
   "name": "@umanit/tools",
-  "version": "1.1.0",
+  "version": "#{VERSION}#",
   "description": "Tools used by UmanIT during websites development.",
   "author": "UmanIT <contact@umanit.fr>",
   "license": "MIT",

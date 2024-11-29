@@ -9,14 +9,31 @@ on:
             - '*'
 
 jobs:
-    publish-npm:
+    build:
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v3
-            -   uses: actions/setup-node@v3
+            -   name: Checkout repository
+                uses: actions/checkout@v4
+            -   name: Modify package.json with release-specific values
+                id: sub_manifest_link_version
+                uses: cschleiden/replace-tokens@v1
+                with:
+                    files: 'package.json'
+                env:
+                    VERSION: ${{ github.ref_name }}
+
+    publish-npm:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v4
+            -   name: Setup Node
+                uses: actions/setup-node@v3
                 with:
                     node-version: 16
                     registry-url: https://registry.npmjs.org/
-            -   run: npm publish
+            -   name: Publish to NPM
+                run: npm publish
                 env:
                     NODE_AUTH_TOKEN: ${{secrets.npm_token}}
