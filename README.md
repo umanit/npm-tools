@@ -82,33 +82,38 @@ ready(() => console.log('The DOM is ready now!'));
 
 #### Description
 
-Facilitates manipulation of fetch.
+Facilitates manipulation of `fetch`.
 
 The first argument is the URL to call, and the second an object of options to prepare the call.
 
 Returns a `Promise` with the following data when success:
 
-* `headers`: The `Headers` object of the response.
-* `status`: The status code of the response.
-* `json`: The parsed JSON of the response or `null` if the response was not a JSON (or if the parsing fail).
-* `body`: The body of the response.
+* `headers` - The `Headers` object of the response.
+* `status` - The status code of the response.
+* `statusText` - The status text of the response.
+* `json` - The parsed JSON of the response or `null` if the response was not a JSON (or if the parsing fail).
+* `body` - The body of the response.
 
 Or a `HttpError` object when an error occurred which contains:
 
-* `message`: The message of the error
-* `status`: The status of the response
-* `body`: The body of the response
-* `stack`: The stack trace of the error
+* `message` - The message of the error
+* `status` - The status of the response
+* `body` - The body of the response
+* `stack` - The stack trace of the error
 
 #### Options
 
-* `headers`: An object `Headers` for the request.
-* `json`: A JSON object to send. If present, it will be `JSON.stringify` in the request `body`.
-* `form`: A `HTMLFormElement` to send. If present, it will be transformed into a `FormData` in the request `body` and
+* `body` - The body to send.
+* `form` - A `HTMLFormElement` to send. If present, it will be transformed into a `FormData` in the request `body` and
   it’s method will be automatically used.
-* `method`: The HTTP method to use.
-* `body`: The body to send.
-* `unprocessableEntityAsError` (default `false`): A boolean which indicates if HTTP Status 422 should be considered as
+* `headers` - An object `Headers` for the request.
+* `json` - A JSON object to send. If present, it will be `JSON.stringify` in the request `body`.
+* `method` - The HTTP method to use.
+* `query` - Hash of values used to append a query string to the URL.
+* `rawOptions` - Additional raw options passed to `fetch`.
+* `timeout` - A timeout (in milliseconds) for the request execution
+  (cf. https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/timeout_static)
+* `unprocessableEntityAsError` (default `false`) - A boolean which indicates if HTTP Status 422 should be considered as
   an error or not.
 
 #### Usage

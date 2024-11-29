@@ -4,17 +4,37 @@
  * Usage : see README.md
  ********************************************************************************/
 
+/**
+ * @typedef {Object} FetchOptions
+ * @property {any} body - Request body. Throw an error if passed when the option `json` or `form` is used.
+ * @property {HTMLFormElement|null} form - HTML form. Will be passed in the `body` as `new FormData(form)` and his method will be automatically used as the request's HTTP method.
+ * @property {Headers|null} headers - HTTP headers.
+ * @property {Object|null} json - JSON payload. Will be passed in the `body` as `JSON.stringify(options.json)`.
+ * @property {string|null} method - HTTP method (GET, POST, etc.). If provided with the `form` option, it takes precedence.
+ * @property {Object} query - Hash of values used to append a query string to the URL.
+ * @property {Object} rawOptions - Additional raw options passed to `fetch`.
+ * @property {int} timeout - Timeout for the request execution.
+ * @property {boolean} unprocessableEntityAsError=true - Whether to treat 422 as an error.
+ */
+
 import HttpError from './HttpError';
 
-function _isIterable(obj) {
-  // checks for null and undefined
-  if (null == obj) {
-    return false;
+/**
+ * @param {FetchOptions} options
+ * @private
+ */
+function _validateOptions(options) {
+  if (options.body && (options.json || options.form)) {
+    throw new Error('Cannot use option "body" when the option "json" or "form" is used');
   }
-
-  return typeof obj[Symbol.iterator] === 'function';
 }
 
+/**
+ * @param {string} urlString
+ * @param {FetchOptions} options
+ * @returns {string}
+ * @private
+ */
 function _appendQueryString(urlString, options) {
   if (!options.query) {
     return urlString;
@@ -27,23 +47,11 @@ function _appendQueryString(urlString, options) {
 
   const url = new URL(urlString);
 
-  if (_isIterable(options.query)) {
-    for (const [key, value] of options.query) {
-      if (undefined !== value) {
-        url.searchParams.append(key, value);
-      }
+  for (const [key, value] of Object.entries(options.query)) {
+    if (undefined !== value && null !== value) {
+      url.searchParams.append(key, value.toString());
     }
-  } else {
-    const keys = Object.keys(options.query);
-
-    Object.values(options.query).forEach((value, key) => {
-      if (undefined !== value) {
-        url.searchParams.append(keys[key], value);
-      }
-    });
   }
-
-  delete options.query;
 
   return url.toString();
 }
@@ -60,34 +68,34 @@ function _getJson(body) {
  * Execute a fetch call on the given URL and return a formatted Promise.
  *
  * @param {string} url
- * @param {Object} options
- * @param {null|Headers=} options.headers
- * @param {null|string=} options.json
- * @param {null|HTMLFormElement=} options.form
- * @param {null|string=} options.method
- * @param {boolean=true} options.unprocessableEntityAsError
- * @param {any} options.body
- * @returns {PromiseLike<{headers: Headers, json: any, body: string, status: number}>}
+ * @param {FetchOptions} options
+ * @returns {PromiseLike<{headers: Headers, json: any, body: string, status: number, statusText: string}|HttpError>}
  */
 export const ajax = (url, options = {}) => {
+  _validateOptions(options);
+
+  const reqOptions = {};
   const requestHeaders = (options.headers || new Headers({ Accept: 'application/json' }));
 
   if (options.json) {
-    options.body = JSON.stringify(options.json);
-    delete options.json;
+    reqOptions.body = JSON.stringify(options.json);
   }
 
   if (options.form) {
     const form = options.form;
-    options.method = form.method;
-    options.body = new FormData(form);
-    delete options.form;
+    reqOptions.method = form.method;
+    reqOptions.body = new FormData(form);
   }
 
-  if (
-    !requestHeaders.has('Content-Type') &&
-    !(options && options.body && options.body instanceof FormData)
-  ) {
+  if (options.method) {
+    reqOptions.method = options.method;
+  }
+
+  if (options.timeout) {
+    reqOptions.signal = AbortSignal.timeout(options.timeout);
+  }
+
+  if (!requestHeaders.has('Content-Type') && !(options?.body instanceof FormData)) {
     requestHeaders.set('Content-Type', 'application/json');
   }
 
@@ -97,7 +105,7 @@ export const ajax = (url, options = {}) => {
 
   url = _appendQueryString(url, options);
 
-  return fetch(url, { ...options, headers: requestHeaders })
+  return fetch(url, { ...reqOptions, headers: requestHeaders })
     .then(response =>
       response.text().then(text => ({
         status: response.status,
@@ -119,6 +127,6 @@ export const ajax = (url, options = {}) => {
         );
       }
 
-      return Promise.resolve({ status, headers, body, json });
+      return Promise.resolve({ status, statusText, headers, body, json });
     });
 };
