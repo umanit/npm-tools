@@ -21,3 +21,9 @@ const isTablet = () => window.innerWidth > breakpointsBounds.sm && window.innerW
 const isDesktop = () => window.innerWidth >= breakpointsBounds.md;
 
 export const breakpoints = { isMobile, isTablet, isDesktop };
+
+export const mediaQueries = {
+  mobile: `(max-width: ${breakpointsBounds.sm}px)`,
+  tablet: `(min-width: ${breakpointsBounds.sm}px) and (max-width: ${breakpointsBounds.md}px)`,
+  desktop: `(min-width: ${breakpointsBounds.md}px)`,
+};

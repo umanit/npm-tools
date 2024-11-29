@@ -26,12 +26,12 @@ $ yarn add @umanit/tools
 
 ### breakpoints
 
-Test the current active responsive breakpoint.
+Test the current active responsive breakpoint or get them as media query strings.
 
 Usage:
 
 ```js
-import { breakpoints } from '@umanit/tools';
+import { breakpoints, mediaQueries } from '@umanit/tools';
 
 if (breakpoints.isDesktop()) {
   // ...
@@ -44,6 +44,10 @@ if (breakpoints.isTablet()) {
 if (breakpoints.isMobile()) {
   // ...
 }
+
+console.log(mediaQueries.mobile); // (max-width: 768px)
+console.log(mediaQueries.tablet); // (min-width: 768px) and (max-width: 992px)
+console.log(mediaQueries.desktop); // (min-width: 992px)
 ```
 
 ### debounce
