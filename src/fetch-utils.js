@@ -6,15 +6,15 @@
 
 /**
  * @typedef {Object} FetchOptions
- * @property {any} body - Request body. Throw an error if passed when the option `json` or `form` is used.
- * @property {HTMLFormElement|null} form - HTML form. Will be passed in the `body` as `new FormData(form)` and his method will be automatically used as the request's HTTP method.
- * @property {Headers|null} headers - HTTP headers.
- * @property {Object|null} json - JSON payload. Will be passed in the `body` as `JSON.stringify(options.json)`.
- * @property {string|null} method - HTTP method (GET, POST, etc.). If provided with the `form` option, it takes precedence.
- * @property {Object} query - Hash of values used to append a query string to the URL.
- * @property {Object} rawOptions - Additional raw options passed to `fetch`.
- * @property {int} timeout - Timeout for the request execution.
- * @property {boolean} unprocessableEntityAsError=true - Whether to treat 422 as an error.
+ * @property {any} [body] - Request body. Throw an error if passed when the option `json` or `form` is used.
+ * @property {HTMLFormElement|null} [form] - HTML form. Will be passed in the `body` as `new FormData(form)` and his method will be automatically used as the request's HTTP method.
+ * @property {Headers|null} [headers] - HTTP headers.
+ * @property {Object|null} [json] - JSON payload. Will be passed in the `body` as `JSON.stringify(options.json)`.
+ * @property {string|null} [method] - HTTP method (GET, POST, etc.). If provided with the `form` option, it takes precedence.
+ * @property {Object} [query] - Hash of values used to append a query string to the URL.
+ * @property {Object} [rawOptions] - Additional raw options passed to `fetch`.
+ * @property {int} [timeout] - Timeout for the request execution.
+ * @property {boolean} [unprocessableEntityAsError=true] - Whether to treat 422 as an error.
  */
 
 import HttpError from './HttpError';
@@ -68,7 +68,7 @@ function _getJson(body) {
  * Execute a fetch call on the given URL and return a formatted Promise.
  *
  * @param {string} url
- * @param {FetchOptions} options
+ * @param {FetchOptions} [options={}]
  * @returns {PromiseLike<{headers: Headers, json: any, body: string, status: number, statusText: string}|HttpError>}
  */
 export const ajax = (url, options = {}) => {
