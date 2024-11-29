@@ -14,7 +14,7 @@
  * @property {Object} [query] - Hash of values used to append a query string to the URL.
  * @property {Object} [rawOptions] - Additional raw options passed to `fetch`.
  * @property {int} [timeout] - Timeout for the request execution.
- * @property {boolean} [unprocessableEntityAsError=true] - Whether to treat 422 as an error.
+ * @property {boolean} [unprocessableEntityAsError=false] - Whether to treat 422 as an error.
  */
 
 import HttpError from './HttpError';
@@ -105,7 +105,7 @@ export const ajax = (url, options = {}) => {
 
   url = _appendQueryString(url, options);
 
-  return fetch(url, { ...reqOptions, headers: requestHeaders })
+  return fetch(url, { ...reqOptions, headers: requestHeaders, ...options.rawOptions })
     .then(response =>
       response.text().then(text => ({
         status: response.status,
