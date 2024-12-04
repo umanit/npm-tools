@@ -77,6 +77,10 @@ export const ajax = (url, options = {}) => {
   const reqOptions = {};
   const requestHeaders = (options.headers || new Headers({ Accept: 'application/json' }));
 
+  if (options.body) {
+    reqOptions.body = options.body;
+  }
+
   if (options.json) {
     reqOptions.body = JSON.stringify(options.json);
   }
