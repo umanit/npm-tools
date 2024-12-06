@@ -49,7 +49,11 @@ function _appendQueryString(urlString, options) {
 
   for (const [key, value] of Object.entries(options.query)) {
     if (undefined !== value && null !== value) {
-      url.searchParams.append(key, value.toString());
+      if (Array.isArray(value)) {
+        value.forEach((v) => url.searchParams.append(`${key}[]`, v.toString()));
+      } else {
+        url.searchParams.append(key, value.toString());
+      }
     }
   }
 
