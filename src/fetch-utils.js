@@ -103,7 +103,7 @@ export const ajax = (url, options = {}) => {
     reqOptions.signal = AbortSignal.timeout(options.timeout);
   }
 
-  if (!requestHeaders.has('Content-Type') && !(options?.body instanceof FormData)) {
+  if (!requestHeaders.has('Content-Type') && !(reqOptions?.body instanceof FormData)) {
     requestHeaders.set('Content-Type', 'application/json');
   }
 
